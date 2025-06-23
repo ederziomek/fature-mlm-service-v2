@@ -121,16 +121,38 @@ class ConfigClient {
 
     // Métodos específicos para configurações CPA
     async getCpaLevelAmounts() {
-        return await this.getConfig('cpa_level_amounts', {
+        try {
+            // Usar endpoint correto do Config Service
+            const response = await this.httpClient.get('/cpa/level-amounts');
+            if (response.data.success) {
+                return response.data.data;
+            }
+        } catch (error) {
+            console.warn('Erro ao buscar valores CPA, usando padrão:', error.message);
+        }
+        
+        // Fallback para valores padrão
+        return {
             level_1: 50.00, level_2: 20.00, level_3: 5.00, level_4: 5.00, level_5: 5.00
-        });
+        };
     }
 
     async getCpaValidationRules() {
-        return await this.getConfig('cpa_validation_rules', {
+        try {
+            // Usar endpoint correto do Config Service
+            const response = await this.httpClient.get('/cpa/validation-rules');
+            if (response.data.success) {
+                return response.data.data;
+            }
+        } catch (error) {
+            console.warn('Erro ao buscar regras CPA, usando padrão:', error.message);
+        }
+        
+        // Fallback para regras padrão
+        return {
             groups: [],
             group_operator: 'OR'
-        });
+        };
     }
 
     // Métodos específicos para configurações do sistema
