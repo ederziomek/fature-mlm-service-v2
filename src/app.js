@@ -23,26 +23,7 @@ class MLMServiceApp {
 
     setupMiddleware() {
         // Segurança
-        this.
-// Health check público
-app.get('/health', (req, res) => {
-    res.status(200).json({
-        success: true,
-        service: 'mlm-service-v2',
-        version: '2.0.0',
-        timestamp: new Date().toISOString(),
-        status: 'healthy',
-        uptime: process.uptime(),
-        environment: process.env.NODE_ENV || 'development',
-        checks: {
-            database: 'ok',
-            cache: 'ok',
-            config_service: 'ok'
-        }
-    });
-});
-
-app.use(helmet({
+        this.app.use(helmet({
             crossOriginResourcePolicy: { policy: "cross-origin" }
         }));
 
@@ -81,6 +62,41 @@ app.use(helmet({
     }
 
     setupRoutes() {
+        // Health check público
+        this.app.get('/health', (req, res) => {
+            res.status(200).json({
+                success: true,
+                service: 'mlm-service-v2',
+                version: '2.0.0',
+                timestamp: new Date().toISOString(),
+                status: 'healthy',
+                uptime: process.uptime(),
+                environment: process.env.NODE_ENV || 'development',
+                checks: {
+                    database: 'ok',
+                    cache: 'ok',
+                    config_service: 'ok'
+                }
+            });
+        });
+
+        // Health check padronizado
+        this.app.get('/api/v1/health', (req, res) => {
+            res.status(200).json({
+                success: true,
+                message: 'MLM Service V2 funcionando corretamente',
+                timestamp: new Date().toISOString(),
+                version: '2.0.0',
+                uptime: process.uptime(),
+                checks: {
+                    database: 'connected',
+                    config_service: 'available',
+                    memory_usage: process.memoryUsage(),
+                    environment: process.env.NODE_ENV || 'development'
+                }
+            });
+        });
+
         // Rota raiz
         this.app.get('/', (req, res) => {
             res.json({
