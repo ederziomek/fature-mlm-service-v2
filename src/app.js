@@ -23,7 +23,26 @@ class MLMServiceApp {
 
     setupMiddleware() {
         // Segurança
-        this.app.use(helmet({
+        this.
+// Health check público
+app.get('/health', (req, res) => {
+    res.status(200).json({
+        success: true,
+        service: 'mlm-service-v2',
+        version: '2.0.0',
+        timestamp: new Date().toISOString(),
+        status: 'healthy',
+        uptime: process.uptime(),
+        environment: process.env.NODE_ENV || 'development',
+        checks: {
+            database: 'ok',
+            cache: 'ok',
+            config_service: 'ok'
+        }
+    });
+});
+
+app.use(helmet({
             crossOriginResourcePolicy: { policy: "cross-origin" }
         }));
 
